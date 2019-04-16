@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
-// Get All
+// Get All ToDos
 app.get('/api/v1/todos', (req, res) => {
     res.status(200).send({
         success: true,
@@ -20,7 +20,7 @@ app.get('/api/v1/todos', (req, res) => {
     })
 });
 
-// Post
+// Post ToDo
 app.post('/api/v1/todos', (req, res) => {
     if(!req.body.title) {
         return res.status(400).send({
@@ -47,7 +47,7 @@ app.post('/api/v1/todos', (req, res) => {
     })
 });
 
-// Get single
+// Get single ToDo
 app.get('/api/v1/todos/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
     db.map((todo) => {
@@ -65,7 +65,7 @@ app.get('/api/v1/todos/:id', (req, res) => {
     });
 });
 
-// Delete
+// Delete ToDo
 app.delete('/api/v1/todos/:id', (req, res) => {
     const id = parseInt(req.params.id, 10);
     db.map((todo, index) => {
@@ -81,6 +81,54 @@ app.delete('/api/v1/todos/:id', (req, res) => {
         success: 'false',
         message: "Not found",
     })
+});
+
+// Update ToDo
+app.put('/api/v1/todos/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    let todoFound;
+    let itemIndex;
+
+    db.map((todo, index) => {
+        if(todo.id === id) {
+            todoFound = todo;
+            itemIndex = index;
+        }
+    });
+
+    if(!todoFound) {
+        return res.status(404).send({
+            success: 'false',
+            message: 'Not found'
+        });
+    }
+
+    if (!req.body.title) {
+        return res.status(400).send({
+          success: 'false',
+          message: 'title is required',
+        });
+      } else if (!req.body.description) {
+        return res.status(400).send({
+          success: 'false',
+          message: 'description is required',
+        });
+      }
+
+      const updatedTodo = {
+        id: todoFound.id,
+        title: req.body.title || todoFound.title,
+        description: req.body.description || todoFound.description
+      };
+
+      db.splice(itemIndex, 1, updatedTodo);
+
+      return res.status(200).send({
+        success: 'true',
+        message: 'Added successful',
+        data: updatedTodo,
+      });
+
 });
 
 
