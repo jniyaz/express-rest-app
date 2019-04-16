@@ -1,2 +1,2 @@
-# expressjs-todo
-Simple expressjs todo application
+# restful apis expressjs
+Simple expressjs restful apis application
