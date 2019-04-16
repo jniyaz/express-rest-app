@@ -2,7 +2,7 @@ const todos = [
     {
         id: 1,
         title: "Go to bank",
-        description: "Go to CIMB bank at 10am tomorrow"
+        description: "Go to bank at 10am tomorrow"
     }
 ];
 
