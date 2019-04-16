@@ -65,6 +65,24 @@ app.get('/api/v1/todos/:id', (req, res) => {
     });
 });
 
+// Delete
+app.delete('/api/v1/todos/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    db.map((todo, index) => {
+        if(todo.id === id) {
+            db.splice(index, 1);
+            return res.status(200).send({
+                success: 'true',
+                message: 'Delete successful',
+            })
+        }
+    });
+    return res.status(404).send({
+        success: 'false',
+        message: "Not found",
+    })
+});
+
 
 // Port
 const port = 4000;
